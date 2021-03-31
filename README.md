@@ -16,7 +16,7 @@ where:
 
 By default, it uses 32 frames with an periodicity of 200ms.
 
-This software is intended to be used in conjunction with the ESP32 S2 FTM ANCHOR, which is available here:
+This software is intended to be used in conjunction with the ESP32 S2 FTM ANCHOR, which is available here: [https://github.com/valentinbarral/esp32s2-ftm-anchor](https://github.com/valentinbarral/esp32s2-ftm-anchor)
 
 ## USE
 
