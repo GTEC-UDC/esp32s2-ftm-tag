@@ -14,8 +14,10 @@
 #include "esp_err.h"
 #include "esp_wifi.h"
 #include "esp_console.h"
+#include "esp_task_wdt.h"
 
 #define MAX_ANCHORS 8
+#define USE_CSV 1
 
 typedef struct {
     struct arg_str *ssid;
@@ -86,14 +88,32 @@ static void disconnect_handler(void *arg, esp_event_base_t event_base,
 static void ftm_report_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
+    int i,rssi_avg=0;  
     wifi_event_ftm_report_t *event = (wifi_event_ftm_report_t *) event_data;
 
     ESP_LOGI(TAG_STA, "FTM HANDLER");
     if (event->status == FTM_STATUS_SUCCESS) {
-        printf("{\"id\":\""MACSTR"\", \"tof\":%d, \"d\":%d, ", MAC2STR(event->peer_mac), event->rtt_est,event->dist_est);
-        xEventGroupSetBits(ftm_event_group, FTM_REPORT_BIT);
+        if (USE_CSV==1){
+            printf(""MACSTR",%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->dist_est);
+        } else {
+            printf("{\"id\":\""MACSTR"\", \"tof\":%d, \"d\":%d, ", MAC2STR(event->peer_mac), event->rtt_est,event->dist_est);
+        }
+        
+        
         g_ftm_report = event->ftm_report_data;
         g_ftm_report_num_entries = event->ftm_report_num_entries;
+
+        
+        for (i = 0; i < g_ftm_report_num_entries; i++) {
+            rssi_avg+= g_ftm_report[i].rssi;
+        }
+        rssi_avg= (int) rssi_avg/g_ftm_report_num_entries;
+        if (USE_CSV==1){
+            printf("%d\n",rssi_avg);
+        } else {
+            printf("\"rss\":%d}\n",rssi_avg); 
+        }
+        xEventGroupSetBits(ftm_event_group, FTM_REPORT_BIT);
     } else {
         xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);
     }
@@ -221,8 +241,6 @@ void initialise_wifi(void)
 
 void app_main(void)
 {
-    int i;
-    int rssi_avg=0;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -241,18 +259,13 @@ void app_main(void)
         EventBits_t bits = xEventGroupWaitBits(ftm_event_group, FTM_REPORT_BIT | FTM_FAILURE_BIT,
                                           pdFALSE, pdFALSE, portMAX_DELAY);
         
-        if (bits & FTM_REPORT_BIT){
-            rssi_avg=0;  
-            for (i = 0; i < g_ftm_report_num_entries; i++) {
-                rssi_avg+= g_ftm_report[i].rssi;
-            }
-            rssi_avg= (int) rssi_avg/g_ftm_report_num_entries;
-            printf("\"rss\":%d}\n",rssi_avg);
-
+        if (bits & FTM_REPORT_BIT){  
             free(g_ftm_report);
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
             xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
         }
+
+        esp_task_wdt_reset();
     }
 }
