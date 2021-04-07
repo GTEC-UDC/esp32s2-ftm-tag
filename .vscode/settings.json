@@ -5,5 +5,8 @@
         "target/esp32s2.cfg"
     ],
     "idf.port": "/dev/ttyUSB0",
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "files.associations": {
+        "esp_err.h": "c"
+    }
 }
