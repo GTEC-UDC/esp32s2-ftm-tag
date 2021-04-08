@@ -88,15 +88,15 @@ static void disconnect_handler(void *arg, esp_event_base_t event_base,
 static void ftm_report_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
-    int i,rssi_avg=0;  
+    int i;  
     wifi_event_ftm_report_t *event = (wifi_event_ftm_report_t *) event_data;
 
     ESP_LOGI(TAG_STA, "FTM HANDLER");
     if (event->status == FTM_STATUS_SUCCESS) {
         if (USE_CSV==1){
-            printf(""MACSTR",%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->dist_est);
+            fprintf(stdout,""MACSTR",%d,%d,%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->rtt_raw,event->dist_est, event->ftm_report_num_entries);
         } else {
-            printf("{\"id\":\""MACSTR"\", \"tof\":%d, \"d\":%d, ", MAC2STR(event->peer_mac), event->rtt_est,event->dist_est);
+            fprintf(stdout,"{\"id\":\""MACSTR"\", \"rtt_est\":%d, \"rtt_raw\":%d \"dist_est\":%d, \"num_frames\":%d, \"frames\":[", MAC2STR(event->peer_mac), event->rtt_est, event->rtt_raw,event->dist_est,event->ftm_report_num_entries);
         }
         
         
@@ -105,14 +105,24 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
 
         
         for (i = 0; i < g_ftm_report_num_entries; i++) {
-            rssi_avg+= g_ftm_report[i].rssi;
+            if (USE_CSV==1){
+                fprintf(stdout,"%d,%d,%lld,%lld,%lld,%lld",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4);
+            } else {
+                fprintf(stdout,"{\"rtt\":%d, \"rssi\":%d, \"t1\":%lld, \"t2\":%lld, \"t3\":%lld, \"t4\":%lld}",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4); 
+            }
+
+            if (USE_CSV==1 && i<g_ftm_report_num_entries-1){
+                fprintf(stdout,",");
+            }
         }
-        rssi_avg= (int) rssi_avg/g_ftm_report_num_entries;
-        if (USE_CSV==1){
-            printf("%d\n",rssi_avg);
-        } else {
-            printf("\"rss\":%d}\n",rssi_avg); 
+
+        if (USE_CSV==0){
+            fprintf(stdout,"]");
         }
+
+        fprintf(stdout,"\n");
+        fflush(stdout);
+        
         xEventGroupSetBits(ftm_event_group, FTM_REPORT_BIT);
     } else {
         xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);

@@ -8,5 +8,8 @@
     "idf.flashType": "UART",
     "files.associations": {
         "esp_err.h": "c"
-    }
+    },
+    "cSpell.enableFiletypes": [
+        "!c"
+    ]
 }
