@@ -176,6 +176,7 @@ static bool wifi_perform_scan(const char *ssid, bool internal)
 static int do_ftm(wifi_ap_record_t *ap_record){
 
     ESP_LOGI(TAG_STA, "Doing FTM");
+     //esp_task_wdt_reset();
 
     wifi_ftm_initiator_cfg_t ftmi_cfg = {
         .frm_count = 32,
@@ -264,7 +265,7 @@ void app_main(void)
     current_anchor = -1;
     wifi_perform_scan(NULL, false);
 
-    while (1){
+    for (;;){
         proccess_next_anchor();
         EventBits_t bits = xEventGroupWaitBits(ftm_event_group, FTM_REPORT_BIT | FTM_FAILURE_BIT,
                                           pdFALSE, pdFALSE, portMAX_DELAY);
@@ -275,7 +276,7 @@ void app_main(void)
             g_ftm_report_num_entries = 0;
             xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
         }
-
+         vTaskDelay(200);
         esp_task_wdt_reset();
     }
 }
