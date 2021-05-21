@@ -125,6 +125,22 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
         
         xEventGroupSetBits(ftm_event_group, FTM_REPORT_BIT);
     } else {
+
+        if (event->status == FTM_STATUS_UNSUPPORTED){
+                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_UNSUPPORTED)",
+                 MAC2STR(event->peer_mac));
+        } else if (event->status == FTM_STATUS_CONF_REJECTED){
+                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_CONF_REJECTED)",
+                 MAC2STR(event->peer_mac));
+        } else if (event->status == FTM_STATUS_NO_RESPONSE){
+                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_NO_RESPONSE)",
+                 MAC2STR(event->peer_mac));
+        } else if (event->status == FTM_STATUS_FAIL){
+                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_FAIL)",
+                 MAC2STR(event->peer_mac));
+        }
+
+
         xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);
     }
 
@@ -179,8 +195,8 @@ static int do_ftm(wifi_ap_record_t *ap_record){
      //esp_task_wdt_reset();
 
     wifi_ftm_initiator_cfg_t ftmi_cfg = {
-        .frm_count = 32,
-        .burst_period = 2,
+        .frm_count = 16,
+        .burst_period = 1,
     };
 
     if (ap_record) {
@@ -252,6 +268,7 @@ void initialise_wifi(void)
 
 void app_main(void)
 {
+    const TickType_t xTicksToWaitFTM = 2000 / portTICK_PERIOD_MS;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -268,15 +285,22 @@ void app_main(void)
     for (;;){
         proccess_next_anchor();
         EventBits_t bits = xEventGroupWaitBits(ftm_event_group, FTM_REPORT_BIT | FTM_FAILURE_BIT,
-                                          pdFALSE, pdFALSE, portMAX_DELAY);
+                                          pdFALSE, pdFALSE, xTicksToWaitFTM);
         
         if (bits & FTM_REPORT_BIT){  
             free(g_ftm_report);
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
-            xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
+        } else {
+            //esp_restart();
+            //wifi_perform_scan(NULL, false);
+            vTaskDelay(50);
+
         }
-         vTaskDelay(200);
+
+        xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
+        //xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
+        vTaskDelay(10);
         esp_task_wdt_reset();
     }
 }
