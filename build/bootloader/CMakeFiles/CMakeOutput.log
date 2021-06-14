@@ -35,17 +35,17 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_8d024"
-[1/2] Building C object CMakeFiles/cmTC_8d024.dir/testCCompiler.c.obj
-[2/2] Linking C executable cmTC_8d024
+Run Build Command:"/usr/bin/ninja" "cmTC_d56a1"
+[1/2] Building C object CMakeFiles/cmTC_d56a1.dir/testCCompiler.c.obj
+[2/2] Linking C executable cmTC_d56a1
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_ce950"
-[1/2] Building C object CMakeFiles/cmTC_ce950.dir/CMakeCCompilerABI.c.obj
-[2/2] Linking C executable cmTC_ce950
+Run Build Command:"/usr/bin/ninja" "cmTC_d7dc2"
+[1/2] Building C object CMakeFiles/cmTC_d7dc2.dir/CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_d7dc2
 Using built-in specs.
 COLLECT_GCC=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-gcc
 COLLECT_LTO_WRAPPER=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper
@@ -55,18 +55,18 @@ Thread model: posix
 gcc version 8.4.0 (crosstool-NG esp-2020r3) 
 COMPILER_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/bin/
 LIBRARY_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/
-COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_ce950'
- /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccRF70t4.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_ce950 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_ce950.dir/CMakeCCompilerABI.c.obj -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o
-COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_ce950'
+COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_d7dc2'
+ /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccwpPvLn.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_d7dc2 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_d7dc2.dir/CMakeCCompilerABI.c.obj -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o
+COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_d7dc2'
 
 
 Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(xtensa-esp32s2-elf-ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/ninja" "cmTC_ce950"]
-  ignore line: [[1/2] Building C object CMakeFiles/cmTC_ce950.dir/CMakeCCompilerABI.c.obj]
-  ignore line: [[2/2] Linking C executable cmTC_ce950]
+  ignore line: [Run Build Command:"/usr/bin/ninja" "cmTC_d7dc2"]
+  ignore line: [[1/2] Building C object CMakeFiles/cmTC_d7dc2.dir/CMakeCCompilerABI.c.obj]
+  ignore line: [[2/2] Linking C executable cmTC_d7dc2]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-gcc]
   ignore line: [COLLECT_LTO_WRAPPER=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper]
@@ -76,27 +76,27 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 8.4.0 (crosstool-NG esp-2020r3) ]
   ignore line: [COMPILER_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/bin/]
   ignore line: [LIBRARY_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_ce950']
-  link line: [ /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccRF70t4.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_ce950 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_ce950.dir/CMakeCCompilerABI.c.obj -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_d7dc2']
+  link line: [ /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccwpPvLn.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_d7dc2 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_d7dc2.dir/CMakeCCompilerABI.c.obj -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o]
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccRF70t4.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccwpPvLn.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
     arg [-plugin-opt=-pass-through=-lnosys] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_ce950] ==> ignore
+    arg [cmTC_d7dc2] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o] ==> ignore
     arg [-L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0] ==> dir [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0]
     arg [-L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc] ==> dir [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc]
     arg [-L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib] ==> dir [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib]
-    arg [CMakeFiles/cmTC_ce950.dir/CMakeCCompilerABI.c.obj] ==> ignore
+    arg [CMakeFiles/cmTC_d7dc2.dir/CMakeCCompilerABI.c.obj] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [-lc] ==> lib [c]
     arg [-lnosys] ==> lib [nosys]
@@ -117,9 +117,9 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_47bce"
-[1/2] Building C object CMakeFiles/cmTC_47bce.dir/feature_tests.c.obj
-[2/2] Linking C executable cmTC_47bce
+Run Build Command:"/usr/bin/ninja" "cmTC_13a8f"
+[1/2] Building C object CMakeFiles/cmTC_13a8f.dir/feature_tests.c.obj
+[2/2] Linking C executable cmTC_13a8f
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -131,9 +131,9 @@ Run Build Command:"/usr/bin/ninja" "cmTC_47bce"
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_7d337"
-[1/2] Building C object CMakeFiles/cmTC_7d337.dir/feature_tests.c.obj
-[2/2] Linking C executable cmTC_7d337
+Run Build Command:"/usr/bin/ninja" "cmTC_9e190"
+[1/2] Building C object CMakeFiles/cmTC_9e190.dir/feature_tests.c.obj
+[2/2] Linking C executable cmTC_9e190
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -145,9 +145,9 @@ Run Build Command:"/usr/bin/ninja" "cmTC_7d337"
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_cad85"
-[1/2] Building C object CMakeFiles/cmTC_cad85.dir/feature_tests.c.obj
-[2/2] Linking C executable cmTC_cad85
+Run Build Command:"/usr/bin/ninja" "cmTC_0593f"
+[1/2] Building C object CMakeFiles/cmTC_0593f.dir/feature_tests.c.obj
+[2/2] Linking C executable cmTC_0593f
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -157,17 +157,17 @@ Run Build Command:"/usr/bin/ninja" "cmTC_cad85"
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_91cf8"
-[1/2] Building CXX object CMakeFiles/cmTC_91cf8.dir/testCXXCompiler.cxx.obj
-[2/2] Linking CXX executable cmTC_91cf8
+Run Build Command:"/usr/bin/ninja" "cmTC_c44c9"
+[1/2] Building CXX object CMakeFiles/cmTC_c44c9.dir/testCXXCompiler.cxx.obj
+[2/2] Linking CXX executable cmTC_c44c9
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_4f247"
-[1/2] Building CXX object CMakeFiles/cmTC_4f247.dir/CMakeCXXCompilerABI.cpp.obj
-[2/2] Linking CXX executable cmTC_4f247
+Run Build Command:"/usr/bin/ninja" "cmTC_81d64"
+[1/2] Building CXX object CMakeFiles/cmTC_81d64.dir/CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_81d64
 Using built-in specs.
 COLLECT_GCC=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-g++
 COLLECT_LTO_WRAPPER=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper
@@ -177,18 +177,18 @@ Thread model: posix
 gcc version 8.4.0 (crosstool-NG esp-2020r3) 
 COMPILER_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/bin/
 LIBRARY_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/
-COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_4f247'
- /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccNNxMPj.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_4f247 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_4f247.dir/CMakeCXXCompilerABI.cpp.obj -lstdc++ -lm -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o
-COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_4f247'
+COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_81d64'
+ /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccYcRqhA.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_81d64 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_81d64.dir/CMakeCXXCompilerABI.cpp.obj -lstdc++ -lm -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o
+COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_81d64'
 
 
 Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(xtensa-esp32s2-elf-ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/ninja" "cmTC_4f247"]
-  ignore line: [[1/2] Building CXX object CMakeFiles/cmTC_4f247.dir/CMakeCXXCompilerABI.cpp.obj]
-  ignore line: [[2/2] Linking CXX executable cmTC_4f247]
+  ignore line: [Run Build Command:"/usr/bin/ninja" "cmTC_81d64"]
+  ignore line: [[1/2] Building CXX object CMakeFiles/cmTC_81d64.dir/CMakeCXXCompilerABI.cpp.obj]
+  ignore line: [[2/2] Linking CXX executable cmTC_81d64]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-g++]
   ignore line: [COLLECT_LTO_WRAPPER=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper]
@@ -198,27 +198,27 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 8.4.0 (crosstool-NG esp-2020r3) ]
   ignore line: [COMPILER_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/bin/]
   ignore line: [LIBRARY_PATH=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/:/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_4f247']
-  link line: [ /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccNNxMPj.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_4f247 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_4f247.dir/CMakeCXXCompilerABI.cpp.obj -lstdc++ -lm -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-mlongcalls' '-v' '-o' 'cmTC_81d64']
+  link line: [ /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2 -plugin /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so -plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper -plugin-opt=-fresolution=/tmp/ccYcRqhA.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lnosys -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -o cmTC_81d64 /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0 -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc -L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib CMakeFiles/cmTC_81d64.dir/CMakeCXXCompilerABI.cpp.obj -lstdc++ -lm -lgcc -lc -lnosys -lc -lgcc /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtend.o /home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtn.o]
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../libexec/gcc/xtensa-esp32s2-elf/8.4.0/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccNNxMPj.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccYcRqhA.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
     arg [-plugin-opt=-pass-through=-lnosys] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_4f247] ==> ignore
+    arg [cmTC_81d64] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib/crt0.o] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crti.o] ==> ignore
     arg [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/crtbegin.o] ==> ignore
     arg [-L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0] ==> dir [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0]
     arg [-L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc] ==> dir [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc]
     arg [-L/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib] ==> dir [/home/valba/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/../lib/gcc/xtensa-esp32s2-elf/8.4.0/../../../../xtensa-esp32s2-elf/lib]
-    arg [CMakeFiles/cmTC_4f247.dir/CMakeCXXCompilerABI.cpp.obj] ==> ignore
+    arg [CMakeFiles/cmTC_81d64.dir/CMakeCXXCompilerABI.cpp.obj] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc] ==> lib [gcc]
@@ -241,9 +241,9 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++1z] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_59d31"
-[1/2] Building CXX object CMakeFiles/cmTC_59d31.dir/feature_tests.cxx.obj
-[2/2] Linking CXX executable cmTC_59d31
+Run Build Command:"/usr/bin/ninja" "cmTC_c45c6"
+[1/2] Building CXX object CMakeFiles/cmTC_c45c6.dir/feature_tests.cxx.obj
+[2/2] Linking CXX executable cmTC_c45c6
 
 
     Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
@@ -308,9 +308,9 @@ Run Build Command:"/usr/bin/ninja" "cmTC_59d31"
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_e4056"
-[1/2] Building CXX object CMakeFiles/cmTC_e4056.dir/feature_tests.cxx.obj
-[2/2] Linking CXX executable cmTC_e4056
+Run Build Command:"/usr/bin/ninja" "cmTC_b2bcf"
+[1/2] Building CXX object CMakeFiles/cmTC_b2bcf.dir/feature_tests.cxx.obj
+[2/2] Linking CXX executable cmTC_b2bcf
 
 
     Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
@@ -375,9 +375,9 @@ Run Build Command:"/usr/bin/ninja" "cmTC_e4056"
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_fe538"
-[1/2] Building CXX object CMakeFiles/cmTC_fe538.dir/feature_tests.cxx.obj
-[2/2] Linking CXX executable cmTC_fe538
+Run Build Command:"/usr/bin/ninja" "cmTC_c3b0e"
+[1/2] Building CXX object CMakeFiles/cmTC_c3b0e.dir/feature_tests.cxx.obj
+[2/2] Linking CXX executable cmTC_c3b0e
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
@@ -442,9 +442,9 @@ Run Build Command:"/usr/bin/ninja" "cmTC_fe538"
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/ninja" "cmTC_f6c16"
-[1/2] Building CXX object CMakeFiles/cmTC_f6c16.dir/feature_tests.cxx.obj
-[2/2] Linking CXX executable cmTC_f6c16
+Run Build Command:"/usr/bin/ninja" "cmTC_f9c8f"
+[1/2] Building CXX object CMakeFiles/cmTC_f9c8f.dir/feature_tests.cxx.obj
+[2/2] Linking CXX executable cmTC_f9c8f
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers

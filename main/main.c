@@ -72,6 +72,8 @@ wifi_ap_record_t *g_ap_list_buffer;
 wifi_ap_record_t anchors[MAX_ANCHORS];
 uint8_t num_anchors, current_anchor;
 
+uint8_t just_reboot= 0;
+
 emxArray_real_T *X;
 emxArray_real_T *result;
 
@@ -85,6 +87,12 @@ static float normalize(float value, float min, float max){
     norm = (value -min) / range;
     return 2*norm -1;
 }
+
+// static void hard_restart() {
+//   esp_task_wdt_init(1,true);
+//   esp_task_wdt_add(NULL);
+//   while(true);
+// }
 
 static void wifi_connected_handler(void *arg, esp_event_base_t event_base,
                                    int32_t event_id, void *event_data)
@@ -117,13 +125,14 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
     int resultCm;
     wifi_event_ftm_report_t *event = (wifi_event_ftm_report_t *) event_data;
 
-
-
-
-
-
     ESP_LOGI(TAG_STA, "FTM HANDLER");
     if (event->status == FTM_STATUS_SUCCESS) {
+
+        if (just_reboot==1){
+            just_reboot = 0;
+            xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);
+            return;
+        }
         g_ftm_report = event->ftm_report_data;
         g_ftm_report_num_entries = event->ftm_report_num_entries;
 
@@ -316,6 +325,12 @@ void initialise_wifi(void)
 void app_main(void)
 {
 
+
+if (esp_reset_reason()==ESP_RST_SW) { 
+    just_reboot = 1;
+}
+ 
+
     const TickType_t xTicksToWaitFTM = 500 / portTICK_PERIOD_MS;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -341,8 +356,13 @@ void app_main(void)
             g_ftm_report_num_entries = 0;
             vTaskDelay(20);
         } else if (bits & FTM_FAILURE_BIT){  
+            xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
             emxDestroyArray_real_T(result);
             emxDestroyArray_real_T(X);
+            free(g_ftm_report);
+            g_ftm_report = NULL;
+            g_ftm_report_num_entries = 0;
+            //hard_restart();
             esp_restart();
         } else {
             //esp_restart();
