@@ -1,0 +1,4 @@
+source "/home/valba/esp32/esp/components/app_update/Kconfig.projbuild"
+source "/home/valba/esp32/esp/components/bootloader/Kconfig.projbuild"
+source "/home/valba/esp32/esp/components/esptool_py/Kconfig.projbuild"
+source "/home/valba/esp32/esp/components/partition_table/Kconfig.projbuild"

@@ -7,9 +7,16 @@
     "idf.port": "/dev/ttyUSB0",
     "idf.flashType": "UART",
     "files.associations": {
-        "esp_err.h": "c"
+        "esp_err.h": "c",
+        "predict.h": "c",
+        "predict_emxapi.h": "c",
+        "predict_terminate.h": "c",
+        "predict_types.h": "c",
+        "rt_nonfinite.h": "c"
     },
     "cSpell.enableFiletypes": [
         "!c"
-    ]
+    ],
+    "cmake.configureOnOpen": false,
+    "idf.espIdfPath": "/home/valba/esp32/esp"
 }

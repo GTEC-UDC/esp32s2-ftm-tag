@@ -1,0 +1,20 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/home/valba/esp32/esp/components/bootloader/subproject",
+    "build_dir":          "/home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader",
+    "config_file":        "/home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/sdkconfig",
+    "config_defaults":    "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "git_revision":       "v4.3-beta3",
+    "target":             "esp32s2",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "xtensa-esp32s2-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/home/valba/esp32/esp/components/efuse/Kconfig;/home/valba/esp32/esp/components/esp32s2/Kconfig;/home/valba/esp32/esp/components/esp_common/Kconfig;/home/valba/esp32/esp/components/esp_system/Kconfig;/home/valba/esp32/esp/components/log/Kconfig;/home/valba/esp32/esp/components/newlib/Kconfig;/home/valba/esp32/esp/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/home/valba/esp32/esp/components/bootloader/Kconfig.projbuild;/home/valba/esp32/esp/components/esptool_py/Kconfig.projbuild;/home/valba/esp32/esp/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32s2", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/home/valba/esp32/esp/components/bootloader", "/home/valba/esp32/esp/components/bootloader_support", "/home/valba/esp32/esp/components/efuse", "/home/valba/esp32/esp/components/esp32s2", "/home/valba/esp32/esp/components/esp_common", "/home/valba/esp32/esp/components/esp_hw_support", "/home/valba/esp32/esp/components/esp_rom", "/home/valba/esp32/esp/components/esp_system", "/home/valba/esp32/esp/components/esptool_py", "/home/valba/esp32/esp/components/hal", "/home/valba/esp32/esp/components/log", "/home/valba/esp32/esp/components/bootloader/subproject/main", "/home/valba/esp32/esp/components/bootloader/subproject/components/micro-ecc", "/home/valba/esp32/esp/components/newlib", "/home/valba/esp32/esp/components/partition_table", "/home/valba/esp32/esp/components/soc", "/home/valba/esp32/esp/components/spi_flash", "/home/valba/esp32/esp/components/xtensa", "" ]
+}

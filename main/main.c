@@ -15,9 +15,21 @@
 #include "esp_wifi.h"
 #include "esp_console.h"
 #include "esp_task_wdt.h"
+#include "predict.h"
+#include "predict_emxAPI.h"
+#include "predict_terminate.h"
+#include "predict_types.h"
+#include "rt_nonfinite.h"
 
 #define MAX_ANCHORS 8
 #define USE_CSV 1
+
+#define MIN_RTT 0.0
+#define MAX_RTT 220.0
+
+#define MIN_RSS -9.0
+#define MAX_RSS -50.0
+
 
 typedef struct {
     struct arg_str *ssid;
@@ -60,8 +72,19 @@ wifi_ap_record_t *g_ap_list_buffer;
 wifi_ap_record_t anchors[MAX_ANCHORS];
 uint8_t num_anchors, current_anchor;
 
+emxArray_real_T *X;
+emxArray_real_T *result;
+
 ESP_EVENT_DEFINE_BASE(END_SCAN_OR_FTM_EVENT);
 
+
+static float normalize(float value, float min, float max){
+    float range, norm;
+
+    range = max -min;
+    norm = (value -min) / range;
+    return 2*norm -1;
+}
 
 static void wifi_connected_handler(void *arg, esp_event_base_t event_base,
                                    int32_t event_id, void *event_data)
@@ -89,20 +112,44 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
     int i;  
+    int totalRss;
+    float meanRss;
+    int resultCm;
     wifi_event_ftm_report_t *event = (wifi_event_ftm_report_t *) event_data;
+
+
+
+
+
 
     ESP_LOGI(TAG_STA, "FTM HANDLER");
     if (event->status == FTM_STATUS_SUCCESS) {
-        if (USE_CSV==1){
-            fprintf(stdout,""MACSTR",%d,%d,%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->rtt_raw,event->dist_est, event->ftm_report_num_entries);
-        } else {
-            fprintf(stdout,"{\"id\":\""MACSTR"\", \"rtt_est\":%d, \"rtt_raw\":%d \"dist_est\":%d, \"num_frames\":%d, \"frames\":[", MAC2STR(event->peer_mac), event->rtt_est, event->rtt_raw,event->dist_est,event->ftm_report_num_entries);
-        }
-        
-        
         g_ftm_report = event->ftm_report_data;
         g_ftm_report_num_entries = event->ftm_report_num_entries;
 
+        totalRss = 0;
+        for (i = 0; i < g_ftm_report_num_entries; i++) {
+            totalRss = totalRss +g_ftm_report[i].rssi;
+        }
+
+        meanRss = totalRss/g_ftm_report_num_entries;
+
+        X = emxCreate_real_T(1, 2);
+        X->data[0] = normalize(event->rtt_raw, MIN_RTT, MAX_RTT);
+        X->data[1] = normalize(meanRss, MIN_RSS, MAX_RSS);
+        emxInitArray_real_T(&result, 1);
+        predict(X, result);
+
+        resultCm = (int) (result->data[0]*100.0);
+        //fprintf(stdout,"(%f , %f)", X->data[0], X->data[1]);
+
+        if (USE_CSV==1){
+            //fprintf(stdout,"" MACSTR ",%d,%d,%d,%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->rtt_raw,event->dist_est, resultCm, event->ftm_report_num_entries);
+            fprintf(stdout,"" MACSTR ",%d,%d,%d,%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->rtt_raw, event->dist_est,resultCm, event->ftm_report_num_entries);
+     
+        } else {
+            fprintf(stdout,"{\"id\":\""MACSTR"\", \"rtt_est\":%d, \"rtt_raw\":%d , \"dist_est\":%d, \"own_est\":%d,\"num_frames\":%d, \"frames\":[", MAC2STR(event->peer_mac), event->rtt_est, event->rtt_raw,event->dist_est,resultCm,event->ftm_report_num_entries);
+        }
         
         for (i = 0; i < g_ftm_report_num_entries; i++) {
             if (USE_CSV==1){
@@ -268,7 +315,8 @@ void initialise_wifi(void)
 
 void app_main(void)
 {
-    const TickType_t xTicksToWaitFTM = 2000 / portTICK_PERIOD_MS;
+
+    const TickType_t xTicksToWaitFTM = 500 / portTICK_PERIOD_MS;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -291,16 +339,21 @@ void app_main(void)
             free(g_ftm_report);
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
+            vTaskDelay(20);
+        } else if (bits & FTM_FAILURE_BIT){  
+            emxDestroyArray_real_T(result);
+            emxDestroyArray_real_T(X);
+            esp_restart();
         } else {
             //esp_restart();
             //wifi_perform_scan(NULL, false);
-            vTaskDelay(50);
+            vTaskDelay(20);
 
         }
 
         xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
         //xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
-        vTaskDelay(10);
+        //vTaskDelay(20);
         esp_task_wdt_reset();
     }
 }

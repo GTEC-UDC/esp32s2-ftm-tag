@@ -1,0 +1,7 @@
+source "/home/valba/esp32/esp/components/efuse/Kconfig"
+source "/home/valba/esp32/esp/components/esp32s2/Kconfig"
+source "/home/valba/esp32/esp/components/esp_common/Kconfig"
+source "/home/valba/esp32/esp/components/esp_system/Kconfig"
+source "/home/valba/esp32/esp/components/log/Kconfig"
+source "/home/valba/esp32/esp/components/newlib/Kconfig"
+source "/home/valba/esp32/esp/components/spi_flash/Kconfig"
