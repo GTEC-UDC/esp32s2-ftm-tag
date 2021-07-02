@@ -22,12 +22,12 @@
 #include "rt_nonfinite.h"
 
 #define MAX_ANCHORS 8
-#define USE_CSV 1
+#define USE_CSV 0
 
 #define MIN_RTT 0.0
 #define MAX_RTT 220.0
 
-#define MIN_RSS -9.0
+#define MIN_RSS -90.0
 #define MAX_RSS -50.0
 
 
@@ -128,9 +128,9 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
     ESP_LOGI(TAG_STA, "FTM HANDLER");
     if (event->status == FTM_STATUS_SUCCESS) {
 
-        if (just_reboot==1){
+        if (just_reboot==1 || event->rtt_raw > MAX_RTT ){
             just_reboot = 0;
-            xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);
+            xEventGroupSetBits(ftm_event_group, FTM_REPORT_BIT);
             return;
         }
         g_ftm_report = event->ftm_report_data;
@@ -331,7 +331,8 @@ if (esp_reset_reason()==ESP_RST_SW) {
 }
  
 
-    const TickType_t xTicksToWaitFTM = 500 / portTICK_PERIOD_MS;
+    const TickType_t xTicksToWaitFTM = 2000 / portTICK_PERIOD_MS;
+    const TickType_t pauseTime = 10000 / portTICK_PERIOD_MS;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -348,17 +349,17 @@ if (esp_reset_reason()==ESP_RST_SW) {
     for (;;){
         proccess_next_anchor();
         EventBits_t bits = xEventGroupWaitBits(ftm_event_group, FTM_REPORT_BIT | FTM_FAILURE_BIT,
-                                          pdFALSE, pdFALSE, xTicksToWaitFTM);
+                                          pdTRUE, pdFALSE, xTicksToWaitFTM);
         
         if (bits & FTM_REPORT_BIT){  
             free(g_ftm_report);
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
-            vTaskDelay(20);
+            //vTaskDelay(20);
         } else if (bits & FTM_FAILURE_BIT){  
-            xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
-            emxDestroyArray_real_T(result);
-            emxDestroyArray_real_T(X);
+            //xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
+            //emxDestroyArray_real_T(result);
+            //emxDestroyArray_real_T(X);
             free(g_ftm_report);
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
@@ -367,13 +368,13 @@ if (esp_reset_reason()==ESP_RST_SW) {
         } else {
             //esp_restart();
             //wifi_perform_scan(NULL, false);
-            vTaskDelay(20);
-
+            //vTaskDelay(20);
+            esp_restart();
         }
 
-        xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
+        //xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
         //xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
-        //vTaskDelay(20);
+        vTaskDelay(pauseTime);
         esp_task_wdt_reset();
     }
 }
