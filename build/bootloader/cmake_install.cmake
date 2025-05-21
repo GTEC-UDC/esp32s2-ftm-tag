@@ -1,4 +1,4 @@
-# Install script for directory: /home/valba/esp32/esp/components/bootloader/subproject
+# Install script for directory: /home/valba/esp/esp-idf/components/bootloader/subproject
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,10 +32,14 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "TRUE")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/esp-idf/cmake_install.cmake")
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/home/valba/.espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/bin/xtensa-esp32s2-elf-objdump")
+endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/valba/Trabajo/TrabajoGIT/WIFIFTM/esp32s2-ftm-tag/build/bootloader/esp-idf/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -46,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/valba/TrabajoGIT/GTEC/Proyectos/esp32/esp32s2-ftm-tag/build/bootloader/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/valba/Trabajo/TrabajoGIT/WIFIFTM/esp32s2-ftm-tag/build/bootloader/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

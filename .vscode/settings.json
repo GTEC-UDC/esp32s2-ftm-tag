@@ -1,8 +1,7 @@
 {
     "idf.adapterTargetName": "esp32s2",
     "idf.openOcdConfigs": [
-        "interface/ftdi/esp32_devkitj_v1.cfg",
-        "target/esp32s2.cfg"
+        "board/esp32s2-kaluga-1.cfg"
     ],
     "idf.port": "/dev/ttyUSB0",
     "idf.flashType": "UART",
@@ -18,5 +17,10 @@
         "!c"
     ],
     "cmake.configureOnOpen": false,
-    "idf.espIdfPath": "/home/valba/esp32/esp"
+    "idf.espIdfPath": "/home/valba/esp/esp-idf",
+    "idf.pythonInstallPath": "/home/valba/miniconda3/envs/esp-idf/bin/python",
+    "idf.toolsPath": "/home/valba/.espressif",
+    "idf.customExtraVars": {
+        "IDF_TARGET": "esp32s2"
+    }
 }

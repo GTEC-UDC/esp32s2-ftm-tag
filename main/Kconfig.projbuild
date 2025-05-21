@@ -1,0 +1,39 @@
+menu "FTM Configuration"
+
+    config FTM_TARGET_CHANNEL
+        int "Channel for FTM operation"
+        default 6
+        range 1 14
+        help
+            Wi-Fi channel on which the anchor and tag operate.
+            This should match the anchor's configured channel.
+
+    config FTM_USE_40MHZ_BANDWIDTH
+        bool "Use 40MHz bandwidth"
+        default y
+        help
+            Enable to use 40MHz bandwidth for FTM operations.
+            This should match the anchor's bandwidth setting.
+
+    config FTM_SCAN_ALL_CHANNELS
+        bool "Scan all channels"
+        default n
+        help
+            If enabled, will scan all channels instead of just the target channel.
+            Might help find anchors that are misconfigured.
+
+    config FTM_AP_PREFIX
+        string "FTM AP prefix"
+        default "ftm_"
+        help
+            Prefix used to identify FTM-capable access points.
+            Access points with SSIDs starting with this prefix will be considered FTM anchors.
+
+    config TREAT_ALL_AP_AS_FTM
+        bool "Treat all APs as FTM responders"
+        default y
+        help
+            If enabled, all detected access points will be treated as FTM responders
+            regardless of their actual capabilities. Useful for debugging.
+
+endmenu 

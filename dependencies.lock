@@ -1,0 +1,18 @@
+dependencies:
+  idf:
+    source:
+      type: idf
+    version: 5.5.0
+  zenoh-pico:
+    component_hash: 36166563b4fa82b9fa18ea0beeca2b6841602afbcfa3482d30af30b74e56b06d
+    dependencies: []
+    source:
+      git: https://github.com/eclipse-zenoh/zenoh-pico.git
+      path: .
+      type: git
+    version: ede74c3f5b0ac190d074e796057c62848bb9a488
+direct_dependencies:
+- zenoh-pico
+manifest_hash: 7e08a9a8742010a05fcbaefdf92ac8dece39cad4b16c90498d823743f147c387
+target: esp32s2
+version: 2.0.0
