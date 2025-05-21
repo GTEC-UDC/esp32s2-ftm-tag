@@ -59,8 +59,8 @@
 // Incluir solo el archivo principal de Zenoh
 #include "zenoh-pico.h"
 
-#define WIFI_SSID "Bunker_208_arriba"
-#define WIFI_PASSWORD "brigantio"
+#define WIFI_SSID "YOUR_SSID"
+#define WIFI_PASSWORD "YOUR_PASSWORD"
 #define DEFAULT_SCAN_LIST_SIZE 20 
 
 // Prefix to identify FTM access points
