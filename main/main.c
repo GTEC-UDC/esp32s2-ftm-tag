@@ -2,6 +2,16 @@
  * @file main.c
  * @brief ESP32-S2 FTM Tag with Zenoh pub/sub (experimental replacement for MQTT)
  * Requires: https://github.com/eclipse-zenoh/zenoh-pico (for embedded pub/sub)
+ * 
+ * CYCLE-BASED MEASUREMENT STRATEGY:
+ * - Scan anchors only once at startup (anchors are fixed in experiment)
+ * - Each cycle: Measure ALL anchors → Connect WiFi → Send ALL measurements → Disconnect
+ * - This ensures measurements from same time period are sent together
+ * - Reduced FTM frames from 16 to 8 for faster individual measurements
+ * - Reduced FTM timeout from 500ms to 300ms  
+ * - Brief delays between anchor measurements (100ms)
+ * - Cycle pattern: FTM All Anchors → WiFi → Zenoh Batch Send → Repeat
+ * - Expected cycle time: ~N*500ms for FTM + ~2-3s for WiFi transmission (N=number of anchors)
  */
 
 #include <string.h>
@@ -617,10 +627,10 @@ static void start_ftm_session(int anchor_idx) {
     // Reset event group bits before starting new session
     xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT | FTM_FAILURE_BIT);
     
-    // FTM configuration that matches the anchor
+    // FTM configuration optimized for speed
     wifi_ftm_initiator_cfg_t ftmi_cfg = {
-        .frm_count = 16,
-        .burst_period = 2
+        .frm_count = 8,     // Reduced from 16 to 8 for faster measurements
+        .burst_period = 1   // Reduced from 2 to 1 for faster bursts
     };
     
     memcpy(ftmi_cfg.resp_mac, anchors[anchor_idx].bssid, 6);
@@ -651,8 +661,8 @@ static void start_ftm_session(int anchor_idx) {
     ESP_ERROR_CHECK(esp_wifi_set_channel(FTM_TARGET_CHANNEL, FTM_SECOND_CHANNEL));
     ESP_ERROR_CHECK(esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT40));
     
-    // Short pause to ensure channel is stable before starting FTM
-    vTaskDelay(pdMS_TO_TICKS(100));
+    // Minimal pause to ensure channel is stable before starting FTM
+    vTaskDelay(pdMS_TO_TICKS(25)); // Reduced from 100ms to 25ms
     
     // Start the FTM session
     esp_err_t err = esp_wifi_ftm_initiate_session(&ftmi_cfg);
@@ -685,21 +695,24 @@ static void start_ftm_session(int anchor_idx) {
     }
 }
 
-// Connect to WiFi, initialize Zenoh, send data, and disconnect
+// Connect to WiFi, initialize Zenoh, send all valid measurements, and disconnect
 static void connect_send_disconnect(void) {
-    static char json_message_buffer[3072]; 
-    bool any_data_to_send = false;
-    for (int i = 0; i < num_anchors; i++) { // Check only up to num_anchors discovered in the last scan
+    static char json_message_buffer[1536]; 
+    
+    // Count valid measurements to send
+    int valid_measurements = 0;
+    for (int i = 0; i < num_anchors; i++) {
         if (ftm_results_buffer[i].valid) {
-            any_data_to_send = true;
-            break;
+            valid_measurements++;
         }
     }
-
-    if (!any_data_to_send) {
-        ESP_LOGI(TAG, "No valid measurements in buffer to send, skipping WiFi connection");
+    
+    if (valid_measurements == 0) {
+        ESP_LOGI(TAG, "No valid measurements to send, skipping WiFi connection");
         return;
     }
+    
+    ESP_LOGI(TAG, "Found %d valid measurements to send", valid_measurements);
     
     ESP_LOGI(TAG, "Connecting to WiFi to send measurement data...");
     
@@ -715,13 +728,13 @@ static void connect_send_disconnect(void) {
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_connect());
     
-    // Wait for connection
+    // Wait for connection with shorter timeout  
     EventBits_t bits = xEventGroupWaitBits(
         wifi_event_group,
         CONNECTED_BIT,
         pdFALSE,
         pdFALSE,
-        pdMS_TO_TICKS(10000)); // 10 seconds of timeout
+        pdMS_TO_TICKS(5000)); // Reduced from 10s to 5s timeout
         
     if (!(bits & CONNECTED_BIT)) {
         ESP_LOGW(TAG, "Failed to connect to WiFi within timeout");
@@ -750,8 +763,8 @@ static void connect_send_disconnect(void) {
         return;
     }
     
-    // Give Zenoh some time to initialize
-    vTaskDelay(pdMS_TO_TICKS(500));
+    // Minimal time for Zenoh to initialize
+    vTaskDelay(pdMS_TO_TICKS(200)); // Reduced from 500ms to 200ms
     
     // Publish data
     ESP_LOGI(TAG, "Publishing measurement data via Zenoh...");
@@ -760,74 +773,81 @@ static void connect_send_disconnect(void) {
     if (z_session_is_closed(z_loan(zenoh_session))) {
         ESP_LOGE(TAG, "Zenoh session is invalid or closed, cannot publish");
     } else {
-        for (int anchor_idx_to_publish = 0; anchor_idx_to_publish < num_anchors; anchor_idx_to_publish++) {
-            if (!ftm_results_buffer[anchor_idx_to_publish].valid) {
-                continue; // Skip if no valid data for this anchor
+        // Publish all valid measurements from this cycle
+        int published_count = 0;
+        
+        for (int anchor_idx = 0; anchor_idx < num_anchors; anchor_idx++) {
+            if (!ftm_results_buffer[anchor_idx].valid) {
+                continue; // Skip invalid measurements
             }
-
-            bool published_this_anchor = false;
+            
+            bool published_successfully = false;
             for (int pub_attempt = 0; pub_attempt < 3; pub_attempt++) {
-                ESP_LOGI(TAG, "Publishing attempt %d/3 for anchor_id: %s", 
-                         pub_attempt + 1, ftm_results_buffer[anchor_idx_to_publish].anchor_id);
+                ESP_LOGI(TAG, "Publishing anchor %d/%d (attempt %d/3): %s", 
+                         anchor_idx + 1, num_anchors, pub_attempt + 1, 
+                         ftm_results_buffer[anchor_idx].anchor_id);
                 
                 memset(json_message_buffer, 0, sizeof(json_message_buffer));
                 char* p = json_message_buffer;
                 char* end = json_message_buffer + sizeof(json_message_buffer);
 
                 p += snprintf(p, end - p, "{\"anchor_id\":\"%s\",\"rtt_est\":%lu,\"rtt_raw\":%lu,\"dist_est\":%.2f,\"own_est\":%.2f,\"num_frames\":%ld,\"frames\":[",
-                              ftm_results_buffer[anchor_idx_to_publish].anchor_id,
-                              (unsigned long)ftm_results_buffer[anchor_idx_to_publish].rtt_est_ps,
-                              (unsigned long)ftm_results_buffer[anchor_idx_to_publish].rtt_raw_ps,
-                              ftm_results_buffer[anchor_idx_to_publish].dist_est_m,
-                              ftm_results_buffer[anchor_idx_to_publish].own_est_m,
-                              (long)ftm_results_buffer[anchor_idx_to_publish].num_frames);
+                              ftm_results_buffer[anchor_idx].anchor_id,
+                              (unsigned long)ftm_results_buffer[anchor_idx].rtt_est_ps,
+                              (unsigned long)ftm_results_buffer[anchor_idx].rtt_raw_ps,
+                              ftm_results_buffer[anchor_idx].dist_est_m,
+                              ftm_results_buffer[anchor_idx].own_est_m,
+                              (long)ftm_results_buffer[anchor_idx].num_frames);
 
-                for (int i = 0; i < ftm_results_buffer[anchor_idx_to_publish].num_frames; i++) {
+                for (int i = 0; i < ftm_results_buffer[anchor_idx].num_frames; i++) {
                     if (p >= end - 200) { 
-                        ESP_LOGE(TAG, "JSON buffer too small for all frames for anchor %s", ftm_results_buffer[anchor_idx_to_publish].anchor_id);
+                        ESP_LOGE(TAG, "JSON buffer too small for all frames");
                         break; 
                     }
                     p += snprintf(p, end - p, "%s{\"rssi\":%ld,\"rtt\":%lu,\"t1\":%llu,\"t2\":%llu,\"t3\":%llu,\"t4\":%llu}",
                                   (i > 0) ? "," : "",
-                                  (long)ftm_results_buffer[anchor_idx_to_publish].frames[i].rssi,
-                                  (unsigned long)ftm_results_buffer[anchor_idx_to_publish].frames[i].rtt,
-                                  (unsigned long long)ftm_results_buffer[anchor_idx_to_publish].frames[i].t1,
-                                  (unsigned long long)ftm_results_buffer[anchor_idx_to_publish].frames[i].t2,
-                                  (unsigned long long)ftm_results_buffer[anchor_idx_to_publish].frames[i].t3,
-                                  (unsigned long long)ftm_results_buffer[anchor_idx_to_publish].frames[i].t4);
+                                  (long)ftm_results_buffer[anchor_idx].frames[i].rssi,
+                                  (unsigned long)ftm_results_buffer[anchor_idx].frames[i].rtt,
+                                  (unsigned long long)ftm_results_buffer[anchor_idx].frames[i].t1,
+                                  (unsigned long long)ftm_results_buffer[anchor_idx].frames[i].t2,
+                                  (unsigned long long)ftm_results_buffer[anchor_idx].frames[i].t3,
+                                  (unsigned long long)ftm_results_buffer[anchor_idx].frames[i].t4);
                 }
-                if (p < end -1 ) p += snprintf(p, end - p, "]}"); else { *(end-1) = 0;}
+                if (p < end - 1) p += snprintf(p, end - p, "]}"); else { *(end-1) = 0;}
 
-                ESP_LOGI(TAG, "Publishing for %s: %s", ftm_results_buffer[anchor_idx_to_publish].anchor_id, json_message_buffer);
-                
                 z_owned_bytes_t payload;
                 z_bytes_copy_from_str(&payload, json_message_buffer);
                 
                 int pub_result = z_publisher_put(z_loan(zenoh_publisher), z_move(payload), NULL);
                 if (pub_result < 0) {
-                    ESP_LOGE(TAG, "Failed to publish for %s, error: %d (%s)", 
-                             ftm_results_buffer[anchor_idx_to_publish].anchor_id, pub_result, zenoh_error_to_str(pub_result));
+                    ESP_LOGE(TAG, "Failed to publish anchor %s, error: %d (%s)", 
+                             ftm_results_buffer[anchor_idx].anchor_id, pub_result, zenoh_error_to_str(pub_result));
                     if (pub_attempt < 2) {
-                        ESP_LOGI(TAG, "Retrying publication in 500ms");
-                        vTaskDelay(pdMS_TO_TICKS(500));
+                        ESP_LOGI(TAG, "Retrying in 200ms...");
+                        vTaskDelay(pdMS_TO_TICKS(200));
                     }
                 } else {
-                    ESP_LOGI(TAG, "Publication successful for %s", ftm_results_buffer[anchor_idx_to_publish].anchor_id);
-                    ftm_results_buffer[anchor_idx_to_publish].valid = false; // Mark as sent
-                    published_this_anchor = true;
+                    ESP_LOGI(TAG, "✓ Published successfully: %s", ftm_results_buffer[anchor_idx].anchor_id);
+                    ftm_results_buffer[anchor_idx].valid = false; // Mark as sent
+                    published_successfully = true;
+                    published_count++;
                     break; // Break from pub_attempt loop
                 }
             }
-            if (!published_this_anchor) {
-                 ESP_LOGE(TAG, "Failed to publish measurement data for %s after multiple attempts", ftm_results_buffer[anchor_idx_to_publish].anchor_id);
+            
+            if (!published_successfully) {
+                ESP_LOGE(TAG, "✗ Failed to publish %s after 3 attempts", ftm_results_buffer[anchor_idx].anchor_id);
             }
-            // Short delay between publishing messages for different anchors if needed
-            vTaskDelay(pdMS_TO_TICKS(50)); 
+            
+            // Short delay between different anchor publications
+            vTaskDelay(pdMS_TO_TICKS(50));
         }
+        
+        ESP_LOGI(TAG, "Published %d/%d measurements successfully", published_count, valid_measurements);
     }
     
-    // Give some time for the message to be sent
-    vTaskDelay(pdMS_TO_TICKS(500));
+    // Minimal time for the message to be sent  
+    vTaskDelay(pdMS_TO_TICKS(200)); // Reduced from 500ms to 200ms
     
     // Cleanup Zenoh
     if (!z_session_is_closed(z_loan(zenoh_session))) {
@@ -840,10 +860,7 @@ static void connect_send_disconnect(void) {
     ESP_LOGI(TAG, "Disconnecting from WiFi...");
     disconnect_from_wifi();
     
-    // Mark measurement as sent (even if it failed, to avoid retrying forever) -- THIS LOGIC IS NOW PER-ANCHOR
-    // g_ftm_data_buffer.valid = false; 
-    
-    ESP_LOGI(TAG, "Finished publishing cycle, returning to FTM scanning");
+    ESP_LOGI(TAG, "Finished publishing cycle measurements, ready for next cycle");
 }
 
 void app_main(void) {
@@ -901,7 +918,7 @@ void app_main(void) {
 
     // Main loop for FTM measurements
     current_anchor = 0;
-    const TickType_t xTicksToWaitFTM = 500 / portTICK_PERIOD_MS;
+    const TickType_t xTicksToWaitFTM = 300 / portTICK_PERIOD_MS; // Reduced from 500ms to 300ms
     
     ESP_LOGI(TAG, "Starting FTM measurements with %d anchors", num_anchors);
     
@@ -911,32 +928,31 @@ void app_main(void) {
         memset(&ftm_results_buffer[i], 0, sizeof(ftm_composite_data_t));
     }
     
-    // Counter to track measurements -- NOW TRACKS CYCLES
-    // int measurement_count = 0; 
-    // const int MEASUREMENTS_BEFORE_SEND = 5; // Send data every X measurements
-    int completed_ftm_cycles = 0;
-    const int CYCLES_BEFORE_PUBLISH = 1; // Publish after completing 1 full cycle through discovered anchors
-    current_anchor = 0; // Initialize current_anchor for the first scan/cycle
+    // Initialize cycle counter for logging
+    int cycle_count = 0;
+    
+    // Anchors are scanned once at startup - no re-scanning needed during experiment
+    ESP_LOGI(TAG, "Starting FTM measurement cycles with batch transmission...");
+    ESP_LOGI(TAG, "Pattern: Measure all anchors → Send all measurements → Repeat");
 
     for (;;) {
-        // Perform a scan at the beginning of each full measurement cycle
-        ESP_LOGI(TAG, "Starting new FTM measurement cycle. Scanning for anchors...");
-        wifi_perform_scan();
-        if (num_anchors == 0) {
-            ESP_LOGW(TAG, "No anchors found in scan. Waiting and retrying scan...");
-            vTaskDelay(pdMS_TO_TICKS(5000)); // Wait longer before retrying full scan
-            continue; // Restart loop to rescan
+        cycle_count++;
+        ESP_LOGI(TAG, "\n=== STARTING MEASUREMENT CYCLE #%d ===", cycle_count);
+        
+        // Clear all measurement buffer validity flags for this cycle
+        for (int i = 0; i < MAX_ANCHORS; i++) {
+            ftm_results_buffer[i].valid = false;
         }
-        ESP_LOGI(TAG, "Found %d anchors. Starting measurements for this cycle.", num_anchors);
-
-        // Iterate through each discovered anchor for FTM measurement
+        
+        // Measure all anchors in sequence
         for (current_anchor = 0; current_anchor < num_anchors; current_anchor++) {
-            ESP_LOGI(TAG, "Initiating FTM with anchor %d / %d (MAC: %02x:%02x:%02x:%02x:%02x:%02x)", 
+            ESP_LOGI(TAG, "Measuring anchor %d/%d (MAC: %02x:%02x:%02x:%02x:%02x:%02x)", 
                      current_anchor + 1, num_anchors,
-                     anchors[current_anchor].bssid[0], anchors[current_anchor].bssid[1], anchors[current_anchor].bssid[2],
-                     anchors[current_anchor].bssid[3], anchors[current_anchor].bssid[4], anchors[current_anchor].bssid[5]);
-
-            start_ftm_session(current_anchor); // current_anchor is the index for both 'anchors' and 'ftm_results_buffer'
+                     anchors[current_anchor].bssid[0], anchors[current_anchor].bssid[1], 
+                     anchors[current_anchor].bssid[2], anchors[current_anchor].bssid[3],
+                     anchors[current_anchor].bssid[4], anchors[current_anchor].bssid[5]);
+            
+            start_ftm_session(current_anchor);
             
             EventBits_t bits = xEventGroupWaitBits(
                 ftm_event_group, 
@@ -946,41 +962,38 @@ void app_main(void) {
             
             if (bits & FTM_REPORT_BIT) {
                 xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
-                if (g_ftm_report != NULL) { // g_ftm_report is temporary for raw data from event
+                ESP_LOGI(TAG, "✓ FTM successful for anchor %d", current_anchor);
+                
+                // Cleanup FTM report memory
+                if (g_ftm_report != NULL) {
                     free(g_ftm_report);
                     g_ftm_report = NULL;
                     g_ftm_report_num_entries = 0;
                 }
-                ESP_LOGI(TAG, "FTM report received for anchor %d", current_anchor);
-                // Data is now in ftm_results_buffer[current_anchor]
+                // Data is already stored in ftm_results_buffer[current_anchor].valid = true
             } else if (bits & FTM_FAILURE_BIT) {
                 xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
-                ESP_LOGW(TAG, "FTM session failed or no report for anchor %d", current_anchor);
-                // Ensure ftm_results_buffer[current_anchor].valid remains false or is explicitly set
+                ESP_LOGW(TAG, "✗ FTM failed for anchor %d", current_anchor);
                 ftm_results_buffer[current_anchor].valid = false; 
             } else {
-                ESP_LOGW(TAG, "FTM session timeout for anchor %d", current_anchor);
+                ESP_LOGW(TAG, "✗ FTM timeout for anchor %d", current_anchor);
                 ftm_results_buffer[current_anchor].valid = false; 
             }
-            vTaskDelay(pdMS_TO_TICKS(100)); // Brief pause between FTM sessions with different anchors
+            
+            // Brief delay before next anchor measurement
+            vTaskDelay(pdMS_TO_TICKS(100));
             esp_task_wdt_reset();
-        } // End of for loop iterating through anchors
-
-        // After attempting FTM with all discovered anchors in the cycle
-        ESP_LOGI(TAG, "Completed FTM attempts for all %d discovered anchors in this cycle.", num_anchors);
-        completed_ftm_cycles++;
-
-        if (completed_ftm_cycles >= CYCLES_BEFORE_PUBLISH) {
-            ESP_LOGI(TAG, "Publishing cycle reached. Connecting to send data...");
-            connect_send_disconnect(); // This function will now iterate and publish all valid buffered data
-            completed_ftm_cycles = 0; // Reset cycle counter
-            // Clear all valid flags after attempting publish, as connect_send_disconnect handles per-item validity
-            // Or rely on connect_send_disconnect to clear them upon successful publish
         }
         
-        // Wait a bit before starting a new full scan and measurement cycle
-        ESP_LOGI(TAG, "End of measurement cycle. Delaying before next scan.");
-        vTaskDelay(pdMS_TO_TICKS(2000)); 
+        ESP_LOGI(TAG, "=== MEASUREMENT PHASE COMPLETE - SENDING DATA ===");
+        
+        // Send all valid measurements from this cycle
+        connect_send_disconnect();
+        
+        ESP_LOGI(TAG, "=== CYCLE #%d COMPLETE - Starting next cycle in 1 second ===\n", cycle_count);
+        
+        // Short delay before starting next measurement cycle
+        vTaskDelay(pdMS_TO_TICKS(1000));
         esp_task_wdt_reset();
     }
 }
