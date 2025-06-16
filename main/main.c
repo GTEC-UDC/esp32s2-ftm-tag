@@ -1,5 +1,3 @@
-
-
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
@@ -153,18 +151,22 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
         //fprintf(stdout,"(%f , %f)", X->data[0], X->data[1]);
 
         if (USE_CSV==1){
-            //fprintf(stdout,"" MACSTR ",%d,%d,%d,%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->rtt_raw,event->dist_est, resultCm, event->ftm_report_num_entries);
-            fprintf(stdout,"" MACSTR ",%d,%d,%d,%d,%d,", MAC2STR(event->peer_mac), event->rtt_est,event->rtt_raw, event->dist_est,resultCm, event->ftm_report_num_entries);
-     
+            fprintf(stdout, "%02x:%02x:%02x:%02x:%02x:%02x,%ld,%ld,%ld,%d,%d,", 
+                event->peer_mac[0], event->peer_mac[1], event->peer_mac[2],
+                event->peer_mac[3], event->peer_mac[4], event->peer_mac[5],
+                event->rtt_est, event->rtt_raw, event->dist_est, resultCm, event->ftm_report_num_entries);
         } else {
-            fprintf(stdout,"{\"id\":\""MACSTR"\", \"rtt_est\":%d, \"rtt_raw\":%d , \"dist_est\":%d, \"own_est\":%d,\"num_frames\":%d, \"frames\":[", MAC2STR(event->peer_mac), event->rtt_est, event->rtt_raw,event->dist_est,resultCm,event->ftm_report_num_entries);
+            fprintf(stdout, "{\"id\":\"%02x:%02x:%02x:%02x:%02x:%02x\", \"rtt_est\":%ld, \"rtt_raw\":%ld , \"dist_est\":%ld, \"own_est\":%d,\"num_frames\":%d, \"frames\":[", 
+                event->peer_mac[0], event->peer_mac[1], event->peer_mac[2],
+                event->peer_mac[3], event->peer_mac[4], event->peer_mac[5],
+                event->rtt_est, event->rtt_raw, event->dist_est, resultCm, event->ftm_report_num_entries);
         }
         
         for (i = 0; i < g_ftm_report_num_entries; i++) {
             if (USE_CSV==1){
-                fprintf(stdout,"%d,%d,%lld,%lld,%lld,%lld",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4);
+                fprintf(stdout,"%ld,%d,%lld,%lld,%lld,%lld",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4);
             } else {
-                fprintf(stdout,"{\"rtt\":%d, \"rssi\":%d, \"t1\":%lld, \"t2\":%lld, \"t3\":%lld, \"t4\":%lld}",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4); 
+                fprintf(stdout,"{\"rtt\":%ld, \"rssi\":%d, \"t1\":%lld, \"t2\":%lld, \"t3\":%lld, \"t4\":%lld}",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4); 
             }
 
             if (USE_CSV==1 && i<g_ftm_report_num_entries-1){
@@ -183,17 +185,21 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
     } else {
 
         if (event->status == FTM_STATUS_UNSUPPORTED){
-                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_UNSUPPORTED)",
-                 MAC2STR(event->peer_mac));
+            ESP_LOGI(TAG_STA, "FTM procedure with Peer(%02x:%02x:%02x:%02x:%02x:%02x) failed! (Status - FTM_STATUS_UNSUPPORTED)",
+                event->peer_mac[0], event->peer_mac[1], event->peer_mac[2],
+                event->peer_mac[3], event->peer_mac[4], event->peer_mac[5]);
         } else if (event->status == FTM_STATUS_CONF_REJECTED){
-                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_CONF_REJECTED)",
-                 MAC2STR(event->peer_mac));
+            ESP_LOGI(TAG_STA, "FTM procedure with Peer(%02x:%02x:%02x:%02x:%02x:%02x) failed! (Status - FTM_STATUS_CONF_REJECTED)",
+                event->peer_mac[0], event->peer_mac[1], event->peer_mac[2],
+                event->peer_mac[3], event->peer_mac[4], event->peer_mac[5]);
         } else if (event->status == FTM_STATUS_NO_RESPONSE){
-                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_NO_RESPONSE)",
-                 MAC2STR(event->peer_mac));
+            ESP_LOGI(TAG_STA, "FTM procedure with Peer(%02x:%02x:%02x:%02x:%02x:%02x) failed! (Status - FTM_STATUS_NO_RESPONSE)",
+                event->peer_mac[0], event->peer_mac[1], event->peer_mac[2],
+                event->peer_mac[3], event->peer_mac[4], event->peer_mac[5]);
         } else if (event->status == FTM_STATUS_FAIL){
-                    ESP_LOGI(TAG_STA, "FTM procedure with Peer("MACSTR") failed! (Status - FTM_STATUS_FAIL)",
-                 MAC2STR(event->peer_mac));
+            ESP_LOGI(TAG_STA, "FTM procedure with Peer(%02x:%02x:%02x:%02x:%02x:%02x) failed! (Status - FTM_STATUS_FAIL)",
+                event->peer_mac[0], event->peer_mac[1], event->peer_mac[2],
+                event->peer_mac[3], event->peer_mac[4], event->peer_mac[5]);
         }
 
 
@@ -256,7 +262,10 @@ static int do_ftm(wifi_ap_record_t *ap_record){
     };
 
     if (ap_record) {
-        ESP_LOGI(TAG_STA,"Starting FTM with " MACSTR " on channel %d\n", MAC2STR(ap_record->bssid),ap_record->primary);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        ESP_LOGI(TAG_STA, "Starting FTM with %02x:%02x:%02x:%02x:%02x:%02x on channel %d\n", 
+            ap_record->bssid[0], ap_record->bssid[1], ap_record->bssid[2],
+            ap_record->bssid[3], ap_record->bssid[4], ap_record->bssid[5],
+            ap_record->primary);
         memcpy(ftmi_cfg.resp_mac, ap_record->bssid, 6);
         ftmi_cfg.channel = ap_record->primary;
     } else {
