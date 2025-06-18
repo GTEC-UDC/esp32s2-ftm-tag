@@ -20,5 +20,8 @@
     "cmake.configureOnOpen": false,
     "idf.espIdfPath": "/home/valba/esp/esp-idf",
     "idf.toolsPath": "/home/valba/.espressif",
-    "idf.pythonInstallPath": "/home/valba/miniconda3/envs/esp-idf/bin/python"
+    "idf.pythonInstallPath": "/home/valba/miniconda3/envs/esp-idf/bin/python",
+    "idf.customExtraVars": {
+        "IDF_TARGET": "esp32s2"
+    }
 }

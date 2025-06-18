@@ -20,7 +20,7 @@
 #include "rt_nonfinite.h"
 
 #define MAX_ANCHORS 8
-#define USE_CSV 1
+#define USE_CSV 0
 
 #define MIN_RTT 0.0
 #define MAX_RTT 220.0
@@ -71,12 +71,16 @@ wifi_ap_record_t anchors[MAX_ANCHORS];
 uint8_t num_anchors, current_anchor;
 
 uint8_t just_reboot= 0;
+uint8_t consecutive_failures = 0;  // Contador de fallos consecutivos
+#define MAX_CONSECUTIVE_FAILURES 5  // Máximo número de fallos antes de reiniciar
 
 emxArray_real_T *X;
 emxArray_real_T *result;
 
 ESP_EVENT_DEFINE_BASE(END_SCAN_OR_FTM_EVENT);
 
+// Agregar handle para el watchdog
+static esp_task_wdt_user_handle_t main_task_wdt_handle = NULL;
 
 static float normalize(float value, float min, float max){
     float range, norm;
@@ -128,9 +132,12 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
 
         if (just_reboot==1){
             just_reboot = 0;
+            ESP_LOGI(TAG_STA, "Skipping first FTM after reboot");
             xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);
             return;
         }
+        
+        consecutive_failures = 0;  // Resetear contador de fallos en caso de éxito
         g_ftm_report = event->ftm_report_data;
         g_ftm_report_num_entries = event->ftm_report_num_entries;
 
@@ -169,13 +176,13 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
                 fprintf(stdout,"{\"rtt\":%ld, \"rssi\":%d, \"t1\":%lld, \"t2\":%lld, \"t3\":%lld, \"t4\":%lld}",g_ftm_report[i].rtt, g_ftm_report[i].rssi, g_ftm_report[i].t1,g_ftm_report[i].t2,g_ftm_report[i].t3,g_ftm_report[i].t4); 
             }
 
-            if (USE_CSV==1 && i<g_ftm_report_num_entries-1){
+            if (i<g_ftm_report_num_entries-1){
                 fprintf(stdout,",");
             }
         }
 
         if (USE_CSV==0){
-            fprintf(stdout,"]");
+            fprintf(stdout,"]}");
         }
 
         fprintf(stdout,"\n");
@@ -202,7 +209,7 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
                 event->peer_mac[3], event->peer_mac[4], event->peer_mac[5]);
         }
 
-
+        ESP_LOGI(TAG_STA, "FTM failure, consecutive failures: %d", consecutive_failures + 1);
         xEventGroupSetBits(ftm_event_group, FTM_FAILURE_BIT);
     }
 
@@ -258,7 +265,7 @@ static int do_ftm(wifi_ap_record_t *ap_record){
 
     wifi_ftm_initiator_cfg_t ftmi_cfg = {
         .frm_count = 16,
-        .burst_period = 1,
+        .burst_period = 2,
     };
 
     if (ap_record) {
@@ -284,6 +291,15 @@ static int do_ftm(wifi_ap_record_t *ap_record){
 }
 
 static int proccess_next_anchor(){
+
+    if (num_anchors == 0) {
+        ESP_LOGI(TAG_STA, "No anchors available, rescanning...");
+        wifi_perform_scan(NULL, false);
+        if (num_anchors == 0) {
+            ESP_LOGE(TAG_STA, "Still no anchors found after rescan");
+            return -1;
+        }
+    }
 
     current_anchor+=1;
     if (current_anchor>=num_anchors){
@@ -333,13 +349,15 @@ void initialise_wifi(void)
 
 void app_main(void)
 {
-
-
-if (esp_reset_reason()==ESP_RST_SW) { 
-    just_reboot = 1;
-}
+    if (esp_reset_reason()==ESP_RST_SW) { 
+        just_reboot = 1;
+        ESP_LOGI(TAG_STA, "Software reset detected, setting just_reboot flag");
+    }
  
-
+    // Habilitar logs temporalmente para debugging de reinicios
+    esp_log_level_set("*", ESP_LOG_INFO);
+    esp_log_level_set(TAG_STA, ESP_LOG_INFO);
+ 
     const TickType_t xTicksToWaitFTM = 500 / portTICK_PERIOD_MS;
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -347,6 +365,22 @@ if (esp_reset_reason()==ESP_RST_SW) {
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK( ret );
+
+    // Inicializar y suscribir al Task Watchdog
+    esp_task_wdt_config_t twdt_config = {
+        .timeout_ms = 30000,  // 30 segundos de timeout
+        .idle_core_mask = (1 << portNUM_PROCESSORS) - 1, // Monitor idle tasks de todos los cores
+        .trigger_panic = false,
+    };
+    
+    // Inicializar el TWDT si no está ya inicializado
+    esp_err_t wdt_ret = esp_task_wdt_init(&twdt_config);
+    if (wdt_ret != ESP_OK && wdt_ret != ESP_ERR_INVALID_STATE) {
+        ESP_ERROR_CHECK(wdt_ret);
+    }
+    
+    // Suscribir el task principal como usuario del watchdog
+    ESP_ERROR_CHECK(esp_task_wdt_add_user("main_task", &main_task_wdt_handle));
 
     initialise_wifi();
 
@@ -371,18 +405,31 @@ if (esp_reset_reason()==ESP_RST_SW) {
             free(g_ftm_report);
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
-            //hard_restart();
-            esp_restart();
-        } else {
-            //esp_restart();
-            //wifi_perform_scan(NULL, false);
+            consecutive_failures++;
+            if (consecutive_failures >= MAX_CONSECUTIVE_FAILURES) {
+                consecutive_failures = 0;
+                esp_restart();
+            }
             vTaskDelay(20);
-
+        } else {
+            // Timeout - no hay respuesta FTM
+            ESP_LOGI(TAG_STA, "FTM timeout");
+            consecutive_failures++;
+            if (consecutive_failures >= MAX_CONSECUTIVE_FAILURES) {
+                ESP_LOGI(TAG_STA, "Max consecutive failures reached, restarting...");  
+                consecutive_failures = 0;
+                esp_restart();
+            }
+            vTaskDelay(20);
         }
 
         xEventGroupClearBits(ftm_event_group, FTM_REPORT_BIT);
         //xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
         //vTaskDelay(20);
-        esp_task_wdt_reset();
+        
+        // Alimentar el watchdog usando el handle de usuario
+        if (main_task_wdt_handle) {
+            esp_task_wdt_reset_user(main_task_wdt_handle);
+        }
     }
 }
