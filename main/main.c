@@ -72,10 +72,7 @@ uint8_t num_anchors, current_anchor;
 
 uint8_t just_reboot= 0;
 uint8_t consecutive_failures = 0;  // Contador de fallos consecutivos
-#define MAX_CONSECUTIVE_FAILURES 5  // Máximo número de fallos antes de reiniciar
-
-emxArray_real_T *X;
-emxArray_real_T *result;
+#define MAX_CONSECUTIVE_FAILURES 100  // Máximo número de fallos antes de reiniciar
 
 ESP_EVENT_DEFINE_BASE(END_SCAN_OR_FTM_EVENT);
 
@@ -148,10 +145,14 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
 
         meanRss = totalRss/g_ftm_report_num_entries;
 
-        X = emxCreate_real_T(1, 2);
+        // Crear arrays locales para la predicción
+        emxArray_real_T *X = emxCreate_real_T(1, 2);
+        emxArray_real_T *result;
+        emxInitArray_real_T(&result, 1);
+        
         X->data[0] = normalize(event->rtt_raw, MIN_RTT, MAX_RTT);
         X->data[1] = normalize(meanRss, MIN_RSS, MAX_RSS);
-        emxInitArray_real_T(&result, 1);
+        
         predict(X, result);
 
         resultCm = (int) (result->data[0]*100.0);
@@ -187,6 +188,10 @@ static void ftm_report_handler(void *arg, esp_event_base_t event_base,
 
         fprintf(stdout,"\n");
         fflush(stdout);
+        
+        // Liberar memoria de arrays locales
+        emxDestroyArray_real_T(X);
+        emxDestroyArray_real_T(result);
         
         xEventGroupSetBits(ftm_event_group, FTM_REPORT_BIT);
     } else {
@@ -354,9 +359,9 @@ void app_main(void)
         ESP_LOGI(TAG_STA, "Software reset detected, setting just_reboot flag");
     }
  
-    // Habilitar logs temporalmente para debugging de reinicios
-    esp_log_level_set("*", ESP_LOG_INFO);
-    esp_log_level_set(TAG_STA, ESP_LOG_INFO);
+    // Configurar logs solo para errores
+    esp_log_level_set("*", ESP_LOG_ERROR);
+    esp_log_level_set(TAG_STA, ESP_LOG_ERROR);
  
     const TickType_t xTicksToWaitFTM = 500 / portTICK_PERIOD_MS;
     esp_err_t ret = nvs_flash_init();
@@ -394,29 +399,31 @@ void app_main(void)
                                           pdFALSE, pdFALSE, xTicksToWaitFTM);
         
         if (bits & FTM_REPORT_BIT){  
-            free(g_ftm_report);
+            // Éxito - resetear contador de fallos
+            consecutive_failures = 0;
+            // No liberar g_ftm_report aquí - apunta a datos del evento
             g_ftm_report = NULL;
             g_ftm_report_num_entries = 0;
             vTaskDelay(20);
         } else if (bits & FTM_FAILURE_BIT){  
             xEventGroupClearBits(ftm_event_group, FTM_FAILURE_BIT);
-            emxDestroyArray_real_T(result);
-            emxDestroyArray_real_T(X);
-            free(g_ftm_report);
-            g_ftm_report = NULL;
-            g_ftm_report_num_entries = 0;
+            // Incrementar contador de fallos
             consecutive_failures++;
             if (consecutive_failures >= MAX_CONSECUTIVE_FAILURES) {
+                ESP_LOGI(TAG_STA, "Max consecutive failures reached, restarting...");
                 consecutive_failures = 0;
                 esp_restart();
             }
+            // No liberar g_ftm_report aquí - apunta a datos del evento
+            g_ftm_report = NULL;
+            g_ftm_report_num_entries = 0;
             vTaskDelay(20);
         } else {
             // Timeout - no hay respuesta FTM
             ESP_LOGI(TAG_STA, "FTM timeout");
             consecutive_failures++;
             if (consecutive_failures >= MAX_CONSECUTIVE_FAILURES) {
-                ESP_LOGI(TAG_STA, "Max consecutive failures reached, restarting...");  
+                ESP_LOGI(TAG_STA, "Max consecutive failures reached, restarting...");
                 consecutive_failures = 0;
                 esp_restart();
             }
