@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+title: ESP32 S2 FTM Tag - Source Code
+message: >-
+  If you use this project, please cite it using the metadata
+  from this file.
+type: software
+authors:
+  - orcid: 'https://orcid.org/0000-0001-8750-7960'
+    affiliation: 'CITIC Research Center, University of A Coruña'
+    given-names: Valentín
+    family-names: Barral Vales
+  - orcid: 'https://orcid.org/0000-0001-8750-7960'
+    affiliation: 'CITIC Research Center, University of A Coruña'
+    given-names: Omar
+    family-names: Campos Fernández
+  - orcid: 'https://orcid.org/0000-0002-5345-3789
+    affiliation: 'CITIC Research Center, University of A Coruña'
+    given-names: Tomás
+    family-names: Domínguez Bolaño
+  - orcid: 'https://orcid.org/0000-0002-3877-1332'
+    affiliation: 'CITIC Research Center, University of A Coruña'
+    given-names: Carlos J.
+    family-names: Escudero
+  - orcid: 'https://orcid.org/0000-0002-1944-4678'
+    affiliation: 'CITIC Research Center, University of A Coruña'
+    given-names: José A.
+    family-names: García-Naya
+repository-code: 'https://github.com/valentinbarral/uwb_los_classification_pdp_dl'
+abstract: |
+  'The code in this repository is related to the following work:
+  V. Barral Vales, O. C. Fernández, T. Domínguez-Bolaño, C. J. Escudero and J. A. García-Naya, "Fine Time Measurement for the Internet of Things: A Practical Approach Using ESP32," in IEEE Internet of Things Journal, vol. 9, no. 19, pp. 18305-18318, 1 Oct.1, 2022, doi: 10.1109/JIOT.2022.3158701.'
+license: MIT
